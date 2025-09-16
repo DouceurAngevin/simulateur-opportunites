@@ -458,13 +458,56 @@ function computeConversions(numericState) {
   return { tc1, tc2, tc3 };
 }
 
-function validateInputs(numericState) {
+function validateInputs(numericState, conversions = computeConversions(numericState)) {
+  const REALISTIC_RANGES = {
+    visitors: [0, 200000],
+    leads: [0, 50000],
+    quotes: [0, 20000],
+    signatures: [0, 10000],
+    averageOrder: [0, 200000],
+    reExplain: [0, 40],
+    adBudget: [0, 200000],
+    deltaSign: [0, 100],
+    nbSales: [0, 500],
+    hourlyRate: [0, 1000],
+    tc1: [0, 0.5],
+    tc2: [0, 0.9],
+    tc3: [0, 0.95]
+  };
+
+  const RANGE_LABELS = {
+    visitors: 'le volume de visiteurs',
+    leads: 'le volume de leads',
+    quotes: 'le nombre de devis',
+    signatures: 'le nombre de signatures',
+    averageOrder: 'le panier moyen',
+    reExplain: 'le temps à réexpliquer',
+    adBudget: 'le budget publicitaire',
+    deltaSign: "l'amélioration visée du taux final",
+    nbSales: 'le nombre de commerciaux',
+    hourlyRate: 'le taux horaire'
+  };
+
+  const RANGE_FORMATTERS = {
+    visitors: (min, max) => `${numberFormatter.format(min)} à ${numberFormatter.format(max)}`,
+    leads: (min, max) => `${numberFormatter.format(min)} à ${numberFormatter.format(max)}`,
+    quotes: (min, max) => `${numberFormatter.format(min)} à ${numberFormatter.format(max)}`,
+    signatures: (min, max) => `${numberFormatter.format(min)} à ${numberFormatter.format(max)}`,
+    averageOrder: (min, max) => `${formatCurrency(min)} à ${formatCurrency(max)}`,
+    reExplain: (min, max) => `${numberFormatter.format(min)} à ${numberFormatter.format(max)} h`,
+    adBudget: (min, max) => `${formatCurrency(min)} à ${formatCurrency(max)}`,
+    deltaSign: (min, max) => `${numberFormatter.format(min)} à ${numberFormatter.format(max)} pts`,
+    nbSales: (min, max) => `${numberFormatter.format(min)} à ${numberFormatter.format(max)}`,
+    hourlyRate: (min, max) => `${formatCurrency(min)} à ${formatCurrency(max)}`
+  };
+
   const errors = {};
   Object.keys(fieldElements).forEach((field) => {
     errors[field] = [];
   });
 
   const coherenceIssues = [];
+  const warnings = [];
 
   for (const field of NUMERIC_FIELDS) {
     const raw = (formState[field] ?? '').toString().trim();
@@ -487,6 +530,15 @@ function validateInputs(numericState) {
     if (field === 'deltaSign' && numericState[field] > 100) {
       errors[field].push('Maximum 100 points de pourcentage.');
     }
+
+    if (REALISTIC_RANGES[field]) {
+      const [min, max] = REALISTIC_RANGES[field];
+      if (numericState[field] < min || numericState[field] > max) {
+        const label = RANGE_LABELS[field] ?? `le champ ${field}`;
+        const formatRange = RANGE_FORMATTERS[field] ?? ((minValue, maxValue) => `${numberFormatter.format(minValue)} à ${numberFormatter.format(maxValue)}`);
+        errors[field].push(`Valeur irréaliste pour ${label} (plage ${formatRange(min, max)}).`);
+      }
+    }
   }
 
   if (numericState.leads > numericState.visitors) {
@@ -502,7 +554,26 @@ function validateInputs(numericState) {
     coherenceIssues.push('S doit être ≤ D');
   }
 
-  return { errors, coherenceIssues };
+  const ratioDenominators = {
+    tc1: numericState.visitors,
+    tc2: numericState.leads,
+    tc3: numericState.quotes
+  };
+
+  ['tc1', 'tc2', 'tc3'].forEach((ratio) => {
+    const denominator = ratioDenominators[ratio];
+    const range = REALISTIC_RANGES[ratio];
+    if (!range || !Number.isFinite(denominator) || denominator <= 0) {
+      return;
+    }
+    const [min, max] = range;
+    const value = conversions[ratio];
+    if (value < min || value > max) {
+      warnings.push(`Taux ${STEP_LABELS[ratio]} atypique : ${formatPercent(value)} (plage ${formatPercent(min)} à ${formatPercent(max)}).`);
+    }
+  });
+
+  return { errors, coherenceIssues, warnings };
 }
 
 function renderValidation(validation) {
@@ -534,11 +605,14 @@ function renderValidation(validation) {
     badge.classList.remove('badge--info');
   });
 
-  if (validation.coherenceIssues.length === 0) {
+  const warnings = validation.warnings ?? [];
+  if (validation.coherenceIssues.length === 0 && warnings.length === 0) {
     coherenceBadge.textContent = '✅ Données cohérentes.';
     coherenceBadge.className = 'coherence ok';
   } else {
-    coherenceBadge.textContent = `⚠️ Vérifier vos chiffres (${validation.coherenceIssues.join(', ')}).`;
+    const issues = [...validation.coherenceIssues, ...warnings];
+    const prefix = validation.coherenceIssues.length > 0 ? 'Vérifier vos chiffres' : 'Valeurs à surveiller';
+    coherenceBadge.textContent = `⚠️ ${prefix} (${issues.join(' · ')}).`;
     coherenceBadge.className = 'coherence warn';
   }
 }
@@ -817,7 +891,7 @@ function renderRecommendations(numericState, conversions) {
 function computeAndRender() {
   const numericState = getNumericState();
   const conversions = computeConversions(numericState);
-  const validation = validateInputs(numericState);
+  const validation = validateInputs(numericState, conversions);
 
   renderValidation(validation);
   renderFunnel(conversions, numericState);
