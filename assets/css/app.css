@@ -773,7 +773,7 @@ a:hover {
   }
 
   .header-actions,
-  #refreshRecommendations {
+  #export {
     display: none !important;
   }
 }
