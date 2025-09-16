@@ -4,6 +4,7 @@
  */
 
 const STORAGE_KEY = 'audit-tunnel-state-v1';
+const DEFAULT_SECTOR = 'machinesLourdes';
 
 const DEFAULT_STATE = {
   visitors: '',
@@ -18,7 +19,7 @@ const DEFAULT_STATE = {
   nbSales: '',
   hourlyRate: '',
   scenarioMode: 'weak',
-  sector: 'general'
+  sector: DEFAULT_SECTOR
 };
 
 const REQUIRED_FIELDS = new Set(['visitors', 'leads', 'quotes', 'signatures', 'averageOrder', 'reExplain']);
@@ -37,21 +38,33 @@ const NUMERIC_FIELDS = new Set([
 ]);
 
 const BENCHMARKS = {
-  general: {
-    label: 'Général B2B',
-    rates: { tc1: 0.02, tc2: 0.5, tc3: 0.35 }
+  machinesLourdes: {
+    label: 'Machines industrielles & équipements lourds',
+    rates: { tc1: 0.011, tc2: 0.44, tc3: 0.31 }
   },
-  industrie: {
-    label: 'Industrie',
-    rates: { tc1: 0.015, tc2: 0.45, tc3: 0.3 }
+  robotique: {
+    label: 'Robotique & automatisation de production',
+    rates: { tc1: 0.013, tc2: 0.46, tc3: 0.32 }
   },
-  services: {
-    label: 'Services B2B',
-    rates: { tc1: 0.03, tc2: 0.55, tc3: 0.38 }
+  sousTraitance: {
+    label: 'Sous-traitance mécanique & usinage',
+    rates: { tc1: 0.018, tc2: 0.52, tc3: 0.36 }
   },
-  equipementiers: {
-    label: 'Équipementiers',
-    rates: { tc1: 0.018, tc2: 0.48, tc3: 0.33 }
+  electronique: {
+    label: 'Électronique professionnelle & IoT industriel',
+    rates: { tc1: 0.015, tc2: 0.49, tc3: 0.33 }
+  },
+  chimie: {
+    label: 'Chimie fine & matériaux de spécialité',
+    rates: { tc1: 0.009, tc2: 0.41, tc3: 0.28 }
+  },
+  logistique: {
+    label: 'Logistique contractuelle & supply chain B2B',
+    rates: { tc1: 0.021, tc2: 0.54, tc3: 0.39 }
+  },
+  maintenance: {
+    label: 'Maintenance industrielle & services MRO',
+    rates: { tc1: 0.023, tc2: 0.58, tc3: 0.43 }
   }
 };
 
@@ -378,6 +391,9 @@ function loadStateFromStorage() {
       if (!Array.isArray(formState.supports)) {
         formState.supports = [];
       }
+      if (!BENCHMARKS[formState.sector]) {
+        formState.sector = DEFAULT_SECTOR;
+      }
     }
   } catch (error) {
     // Stockage non disponible, on reste sur l’état par défaut.
@@ -645,7 +661,7 @@ function determineWeakestStep(conversions, numericState) {
 }
 
 function renderFunnel(conversions, numericState) {
-  const benchmark = BENCHMARKS[formState.sector] ?? BENCHMARKS.general;
+  const benchmark = BENCHMARKS[formState.sector] ?? BENCHMARKS[DEFAULT_SECTOR];
   const { weakestStep, availableSteps } = determineWeakestStep(conversions, numericState);
   lastWeakestStep = weakestStep;
   const denominators = {
@@ -767,7 +783,7 @@ function renderChiffrage(numericState, conversions) {
 }
 
 function renderBenchmark(numericState, conversions) {
-  const benchmark = BENCHMARKS[formState.sector] ?? BENCHMARKS.general;
+  const benchmark = BENCHMARKS[formState.sector] ?? BENCHMARKS[DEFAULT_SECTOR];
   const weights = { tc1: 0.35, tc2: 0.25, tc3: 0.4 };
 
   let globalScore = 0;
