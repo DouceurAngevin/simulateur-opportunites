@@ -1,0 +1,59 @@
+/*
+  Charte graphique · Simulateur d'opportunités
+  ---------------------------------------------------------------------------
+  Cette feuille isole les variables de styles (couleurs, typographies, rayons…)
+  pour pouvoir être remplacée ou étendue sans toucher au layout ou à la logique
+  métier. Les composants consomment ces tokens via des variables CSS.
+*/
+
+:root {
+  /* Typographies */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Roboto", "Inter", Arial, sans-serif;
+
+  /* Couleurs */
+  --color-background: transparent; /* laisse les containers hôtes gérer le fond */
+  --color-surface: #ffffff;
+  --color-text: #1f2328;
+  --color-muted: #667085;
+  --color-border: #e5e7eb;
+  --color-accent: #2f80ed;
+  --color-input-background: #ffffff;
+  --color-input-border: #d1d5db;
+  --color-highlight: rgba(47, 128, 237, 0.07);
+  --color-kpi-background: #f7f8fa;
+
+  /* Effets & rayons */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
+
+  /* Espacements */
+  --space-2xs: 4px;
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 12px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #1f1f1f;
+    --color-text: #f5f7fb;
+    --color-muted: #a1a1aa;
+    --color-border: #2a2a2a;
+    --color-accent: #60a5fa;
+    --color-input-background: #151515;
+    --color-input-border: #2a2a2a;
+    --color-highlight: rgba(96, 165, 250, 0.14);
+    --color-kpi-background: #161616;
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-background);
+  color: var(--color-text);
+}
