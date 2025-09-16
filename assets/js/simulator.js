@@ -4,8 +4,6 @@
  */
 
 const STORAGE_KEY = 'audit-tunnel-state-v1';
-const CTA_BASE_URL = 'https://nexus-strategie.fr/Nexus-26fc5cfed6a88039a83beff4f81756fa';
-const CTA_HASH = '#26fc5cfed6a88056a43cf40d86a8200a';
 
 const DEFAULT_STATE = {
   visitors: '',
@@ -116,7 +114,6 @@ const scenarioSelect = document.getElementById('scenarioMode');
 const sectorSelect = document.getElementById('sector');
 const coherenceBadge = document.getElementById('coherenceBadge');
 const exportButton = document.getElementById('export');
-const ctaButton = document.getElementById('cta');
 
 const funnelSteps = {
   tc1: {
@@ -181,7 +178,6 @@ const benchmarkSummary = {
 };
 
 const recoList = document.getElementById('recoList');
-const refreshRecommendationsButton = document.getElementById('refreshRecommendations');
 
 let formState = deepClone(DEFAULT_STATE);
 let lastWeakestStep = 'tc3';
@@ -818,33 +814,6 @@ function renderRecommendations(numericState, conversions) {
   });
 }
 
-function updateCtaLink() {
-  try {
-    const url = new URL(CTA_BASE_URL);
-    url.searchParams.set('source', 'audit');
-    const mapping = {
-      V: formState.visitors,
-      L: formState.leads,
-      D: formState.quotes,
-      S: formState.signatures,
-      PM: formState.averageOrder,
-      TR: formState.reExplain,
-      B: formState.adBudget,
-      Delta: formState.deltaSign
-    };
-    Object.entries(mapping).forEach(([key, value]) => {
-      const normalized = (value ?? '').toString().trim();
-      if (normalized !== '') {
-        url.searchParams.set(key, normalized);
-      }
-    });
-    const href = `${url.toString()}${CTA_HASH}`;
-    ctaButton.href = href;
-  } catch (error) {
-    ctaButton.href = `${CTA_BASE_URL}${CTA_HASH}`;
-  }
-}
-
 function computeAndRender() {
   const numericState = getNumericState();
   const conversions = computeConversions(numericState);
@@ -855,7 +824,6 @@ function computeAndRender() {
   renderChiffrage(numericState, conversions);
   renderBenchmark(numericState, conversions);
   renderRecommendations(numericState, conversions);
-  updateCtaLink();
   saveState();
 }
 
@@ -885,10 +853,6 @@ function bindEvents() {
 
   sectorSelect.addEventListener('change', (event) => {
     formState.sector = event.target.value;
-    computeAndRender();
-  });
-
-  refreshRecommendationsButton.addEventListener('click', () => {
     computeAndRender();
   });
 
