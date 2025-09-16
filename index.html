@@ -4,50 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Simulateur d’opportunités (minimal · style Notion)</title>
-  <style>
-    /* Palette inspirée de Notion : neutres propres + accent bleu */
-    :root{
-      --bg: transparent; /* laisse Notion gérer le fond */
-      --card-bg:#ffffff; --text:#1f2328; --muted:#667085; --border:#e5e7eb; --accent:#2F80ED;
-      --input-bg:#fff; --input-border:#d1d5db; --kpi-bg:#f7f8fa;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root{
-        --card-bg:#1f1f1f; --text:#f5f7fb; --muted:#a1a1aa; --border:#2a2a2a; --accent:#60a5fa;
-        --input-bg:#151515; --input-border:#2a2a2a; --kpi-bg:#161616;
-      }
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial; background:var(--bg); color:var(--text)}
-
-    .wrap{max-width:860px;margin:24px auto;padding:0 16px}
-    .card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-    h1{margin:0 0 6px;font-size:20px;font-weight:700}
-    p{margin:6px 0 16px;color:var(--muted)}
-
-    .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:880px){.grid{grid-template-columns:repeat(2,1fr)}}
-
-    label{font-size:13px;color:var(--muted)}
-    input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text)}
-    input:focus{outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent)}
-
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .btn{appearance:none;border:1px solid transparent;border-radius:8px;padding:10px 14px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
-    .btn:hover{filter:brightness(.96)}
-    .link{display:inline-block;text-decoration:none;color:var(--text);padding:10px 12px;border-radius:8px;border:1px solid var(--border)}
-    .link:hover{background-color:color-mix(in srgb, var(--accent) 7%, transparent)}
-
-    .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
-    @media(max-width:640px){.kpi{grid-template-columns:1fr}}
-    .box{padding:12px;border-radius:10px;background:var(--kpi-bg);border:1px solid var(--border)}
-    .box h3{margin:0 0 6px;font-size:12px;color:var(--muted)}
-    .val{font-size:20px;font-weight:800}
-
-    .foot{margin-top:8px;font-size:12px;color:var(--muted)}
-  </style>
+  <link rel="stylesheet" href="src/styles/brand.css" />
+  <link rel="stylesheet" href="src/styles/app.css" />
 </head>
 <body>
   <div class="wrap">
@@ -94,30 +52,41 @@
   </div>
 
   <script>
-    function n(id, def){
+    function n(id, def) {
       const el = document.getElementById(id);
-      const v = parseFloat((el.value||'').replace(',', '.'));
-      return isFinite(v) ? v : def;
+      const v = parseFloat((el.value || '').replace(',', '.'));
+      return Number.isFinite(v) ? v : def;
     }
-    function eur(x){
-      return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(x||0);
+
+    function eur(value) {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR',
+        maximumFractionDigits: 0,
+      }).format(value || 0);
     }
-    function calc(){
+
+    function calc() {
       const visits = Math.max(0, n('visits', 5000));
       const conv = Math.max(0, Math.min(100, n('conv', 1.5)));
       const aov = Math.max(0, n('aov', 60));
       const delta = Math.max(0, n('delta', 1));
       const adspend = Math.max(0, n('adspend', 0));
 
-      const caActuel = visits * (conv/100) * aov;
-      const gain = visits * (delta/100) * aov;
+      const caActuel = visits * (conv / 100) * aov;
+      const gain = visits * (delta / 100) * aov;
       const caProjete = caActuel + gain;
-      const roi = adspend>0 ? (gain - adspend) / adspend : (gain>0 ? Infinity : 0);
+      const roi = adspend > 0 ? (gain - adspend) / adspend : (gain > 0 ? Infinity : 0);
 
       document.getElementById('caActuel').textContent = eur(caActuel);
       document.getElementById('gain').textContent = eur(gain);
       document.getElementById('caProjete').textContent = eur(caProjete);
-      document.getElementById('roi').textContent = (roi===Infinity? '∞' : new Intl.NumberFormat('fr-FR',{style:'percent',maximumFractionDigits:1}).format(roi));
+      document.getElementById('roi').textContent = roi === Infinity
+        ? '∞'
+        : new Intl.NumberFormat('fr-FR', {
+            style: 'percent',
+            maximumFractionDigits: 1,
+          }).format(roi);
     }
   </script>
 </body>
