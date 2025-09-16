@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulateur d’opportunités (minimal)</title>
+  <style>
+    :root{--bg:#0f1222;--panel:#171b2e;--ink:#e9edff;--muted:#a9b3d0;--accent:#7c5cff}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,Inter,Arial;background:linear-gradient(180deg,#0f1222,#0b0f1a);color:var(--ink)}
+    .wrap{max-width:860px;margin:32px auto;padding:20px}
+    .card{background:rgba(23,27,46,.9);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px}
+    h1{margin:0 0 6px;font-size:22px} p{margin:6px 0 18px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:860px){.grid{grid-template-columns:repeat(2,1fr)}}
+    label{font-size:13px;color:#cfd7f7}
+    input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:#0e1324;color:#f3f5ff}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .btn{appearance:none;border:0;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--accent),#31b5ff);color:white}
+    .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+    @media(max-width:640px){.kpi{grid-template-columns:1fr}}
+    .box{padding:12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+    .box h3{margin:0 0 6px;font-size:12px;color:#c9d3f5} .val{font-size:20px;font-weight:800}
+    .foot{margin-top:8px;font-size:12px;color:var(--muted)}
+    .cta{margin-top:12px}
+    a.cta-link{display:inline-block;text-decoration:none;color:white;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Simulateur d’opportunités (version minimale)</h1>
+      <p>Aucune donnée n’est envoyée côté serveur. Modifiez les valeurs et cliquez sur Calculer.</p>
+
+      <div class="grid">
+        <div>
+          <label>Visites qualifiées / mois</label>
+          <input id="visits" type="number" placeholder="ex. 5000" min="0" />
+        </div>
+        <div>
+          <label>Taux de conversion actuel (%)</label>
+          <input id="conv" type="number" placeholder="ex. 1.5" step="0.1" min="0" max="100" />
+        </div>
+        <div>
+          <label>Panier moyen (€)</label>
+          <input id="aov" type="number" placeholder="ex. 60" step="0.01" min="0" />
+        </div>
+        <div>
+          <label>Amélioration visée (points de %)</label>
+          <input id="delta" type="number" placeholder="ex. 1" step="0.1" min="0" />
+        </div>
+        <div>
+          <label>Budget pub mensuel (optionnel) (€)</label>
+          <input id="adspend" type="number" placeholder="ex. 1500" step="1" min="0" />
+        </div>
+        <div class="row" style="align-self:end">
+          <button class="btn" onclick="calc()">Calculer</button>
+          <a class="cta-link" id="cta" href="https://calendly.com/ton-lien" target="_blank" rel="noopener">Réserver un audit gratuit (30 min)</a>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="box"><h3>CA mensuel actuel (estimé)</h3><div class="val" id="caActuel">—</div></div>
+        <div class="box"><h3>Gains potentiels (Δ visée)</h3><div class="val" id="gain">—</div></div>
+        <div class="box"><h3>CA mensuel projeté</h3><div class="val" id="caProjete">—</div></div>
+        <div class="box"><h3>ROI pub (indicatif)</h3><div class="val" id="roi">—</div></div>
+      </div>
+
+      <p class="foot">Formule e‑commerce simple : CA = Visites × (Taux/100) × Panier. Δ = Visites × (Δ points/100) × Panier. ROI = (Δ − Budget) / max(Budget,1).</p>
+    </div>
+  </div>
+
+  <script>
+    function n(id, def){
+      const el = document.getElementById(id);
+      const v = parseFloat((el.value||'').replace(',', '.'));
+      return isFinite(v) ? v : def;
+    }
+    function eur(x){
+      return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(x||0);
+    }
+    function pct(x){
+      return new Intl.NumberFormat('fr-FR',{style:'percent',maximumFractionDigits:1}).format((x||0)/100);
+    }
+    function calc(){
+      const visits = Math.max(0, n('visits', 5000));
+      const conv = Math.max(0, Math.min(100, n('conv', 1.5)));
+      const aov = Math.max(0, n('aov', 60));
+      const delta = Math.max(0, n('delta', 1));
+      const adspend = Math.max(0, n('adspend', 0));
+
+      const caActuel = visits * (conv/100) * aov;
+      const gain = visits * (delta/100) * aov;
+      const caProjete = caActuel + gain;
+      const roi = adspend>0 ? (gain - adspend) / adspend : (gain>0 ? Infinity : 0);
+
+      document.getElementById('caActuel').textContent = eur(caActuel);
+      document.getElementById('gain').textContent = eur(gain);
+      document.getElementById('caProjete').textContent = eur(caProjete);
+      document.getElementById('roi').textContent = (roi===Infinity? '∞' : new Intl.NumberFormat('fr-FR',{style:'percent',maximumFractionDigits:1}).format(roi));
+    }
+  </script>
+</body>
+</html>
