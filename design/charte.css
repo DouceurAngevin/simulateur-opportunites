@@ -8,55 +8,56 @@
 
 :root {
   /* Typographies */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Roboto", "Inter", Arial, sans-serif;
+  --font-sans: "Inter", "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* Couleurs */
-  --color-background: transparent; /* laisse les containers hôtes gérer le fond */
+  /* Couleurs inspirées de Notion */
+  --color-background: #f7f6f3;
   --color-surface: #ffffff;
-  --color-text: #1f2328;
-  --color-muted: #667085;
-  --color-border: #e5e7eb;
-  --color-accent: #2f80ed;
-  --color-input-background: #ffffff;
-  --color-input-border: #d1d5db;
-  --color-highlight: rgba(47, 128, 237, 0.07);
-  --color-kpi-background: #f7f8fa;
-  --color-success: #12b76a;
-  --color-warning: #f79009;
-  --color-danger: #f04438;
-  --color-info: #2563eb;
+  --color-text: #37352f;
+  --color-muted: #9b9a97;
+  --color-border: #deddd9;
+  --color-accent: #2f70ff;
+  --color-input-background: #fbfaf7;
+  --color-input-border: #d3d1cb;
+  --color-highlight: #f2f0e6;
+  --color-kpi-background: #f8f7f3;
+  --color-success: #0f7b6c;
+  --color-warning: #d9730d;
+  --color-danger: #d44c47;
+  --color-info: #2f70ff;
 
   /* Effets & rayons */
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 2px rgba(15, 15, 15, 0.08);
   --radius-lg: 12px;
-  --radius-md: 10px;
-  --radius-sm: 8px;
+  --radius-md: 8px;
+  --radius-sm: 6px;
 
   /* Espacements */
   --space-2xs: 4px;
-  --space-xs: 6px;
-  --space-sm: 10px;
-  --space-md: 12px;
-  --space-lg: 20px;
-  --space-xl: 24px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-surface: #1f1f1f;
-    --color-text: #f5f7fb;
-    --color-muted: #a1a1aa;
-    --color-border: #2a2a2a;
-    --color-accent: #60a5fa;
-    --color-input-background: #151515;
-    --color-input-border: #2a2a2a;
-    --color-highlight: rgba(96, 165, 250, 0.14);
-    --color-kpi-background: #161616;
-    --color-success: #4ade80;
-    --color-warning: #fbbf24;
-    --color-danger: #f87171;
-    --color-info: #93c5fd;
-    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --color-background: #191919;
+    --color-surface: #202020;
+    --color-text: #f7f6f3;
+    --color-muted: #b4b3ad;
+    --color-border: #2d2d2d;
+    --color-accent: #5b8bf7;
+    --color-input-background: #161616;
+    --color-input-border: #2d2d2d;
+    --color-highlight: rgba(91, 139, 247, 0.12);
+    --color-kpi-background: #252525;
+    --color-success: #43c2b1;
+    --color-warning: #f5a542;
+    --color-danger: #f17872;
+    --color-info: #5b8bf7;
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
   }
 }
 
