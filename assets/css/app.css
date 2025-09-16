@@ -234,6 +234,85 @@ a:hover {
   color: color-mix(in srgb, var(--color-text) 80%, #000 20%);
 }
 
+.has-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.has-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: calc(100% + 10px);
+  min-width: 180px;
+  max-width: min(320px, calc(100vw - 40px));
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-surface) 95%, #000 5%);
+  border: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+  color: var(--color-text);
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 10px 30px rgba(15, 15, 15, 0.12);
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 20;
+}
+
+.has-tooltip::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 12px;
+  bottom: calc(100% + 6px);
+  width: 10px;
+  height: 10px;
+  background: color-mix(in srgb, var(--color-surface) 95%, #000 5%);
+  border-left: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+  transform: translateY(4px) rotate(45deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 19;
+}
+
+.has-tooltip:hover::after,
+.field:focus-within > .has-tooltip::after,
+.scenario-controls:focus-within .has-tooltip::after,
+.benchmark-controls:focus-within .has-tooltip::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.has-tooltip:hover::before,
+.field:focus-within > .has-tooltip::before,
+.scenario-controls:focus-within .has-tooltip::before,
+.benchmark-controls:focus-within .has-tooltip::before {
+  opacity: 1;
+  transform: translateY(0) rotate(45deg);
+}
+
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-background) 88%);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: help;
+  flex-shrink: 0;
+}
+
 .field input[type="number"] {
   width: 100%;
   padding: 12px 14px;

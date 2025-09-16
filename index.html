@@ -31,49 +31,70 @@
 
           <form id="tunnel-form" class="form-grid" novalidate>
             <div class="field" data-field="visitors">
-              <label for="visitors">Visiteurs mensuels (V)</label>
+              <label for="visitors" class="has-tooltip" data-tooltip="Nombre total de visiteurs uniques sur la période." title="Nombre total de visiteurs uniques sur la période.">
+                Visiteurs mensuels (V)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="visitors" name="visitors" type="number" inputmode="numeric" placeholder="ex. 5000" min="0" step="1" />
               <p class="field-hint">Nombre total de visiteurs uniques sur la période.</p>
               <p class="field-error" data-error="visitors"></p>
             </div>
 
             <div class="field" data-field="leads">
-              <label for="leads">Leads entrants / mois (L)</label>
+              <label for="leads" class="has-tooltip" data-tooltip="Contacts qualifiés ayant laissé leurs coordonnées." title="Contacts qualifiés ayant laissé leurs coordonnées.">
+                Leads entrants / mois (L)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="leads" name="leads" type="number" inputmode="numeric" placeholder="ex. 240" min="0" step="1" />
               <p class="field-hint">Contacts qualifiés ayant laissé leurs coordonnées.</p>
               <p class="field-error" data-error="leads"></p>
             </div>
 
             <div class="field" data-field="quotes">
-              <label for="quotes">Devis envoyés / mois (D)</label>
+              <label for="quotes" class="has-tooltip" data-tooltip="Nombre de propositions commerciales émises." title="Nombre de propositions commerciales émises.">
+                Devis envoyés / mois (D)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="quotes" name="quotes" type="number" inputmode="numeric" placeholder="ex. 95" min="0" step="1" />
               <p class="field-hint">Nombre de propositions commerciales émises.</p>
               <p class="field-error" data-error="quotes"></p>
             </div>
 
             <div class="field" data-field="signatures">
-              <label for="signatures">Signatures / mois (S)</label>
+              <label for="signatures" class="has-tooltip" data-tooltip="Contrats signés ou ventes conclues." title="Contrats signés ou ventes conclues.">
+                Signatures / mois (S)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="signatures" name="signatures" type="number" inputmode="numeric" placeholder="ex. 32" min="0" step="1" />
               <p class="field-hint">Contrats signés ou ventes conclues.</p>
               <p class="field-error" data-error="signatures"></p>
             </div>
 
             <div class="field" data-field="averageOrder">
-              <label for="averageOrder">Panier moyen (€) (PM)</label>
+              <label for="averageOrder" class="has-tooltip" data-tooltip="Valeur moyenne d’une commande signée." title="Valeur moyenne d’une commande signée.">
+                Panier moyen (€) (PM)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="averageOrder" name="averageOrder" type="number" inputmode="decimal" placeholder="ex. 2800" min="0" step="0.01" />
               <p class="field-hint">Panier moyen = valeur d’une commande signée.</p>
               <p class="field-error" data-error="averageOrder"></p>
             </div>
 
             <div class="field" data-field="reExplain">
-              <label for="reExplain">Temps moyen “à réexpliquer” par commercial / semaine (h) (TR)</label>
+              <label for="reExplain" class="has-tooltip" data-tooltip="Temps passé à reformuler l’offre ou répondre aux mêmes questions." title="Temps passé à reformuler l’offre ou répondre aux mêmes questions.">
+                Temps moyen “à réexpliquer” par commercial / semaine (h) (TR)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="reExplain" name="reExplain" type="number" inputmode="decimal" placeholder="ex. 3" min="0" step="0.1" />
               <p class="field-hint">Temps passé à reformuler l’offre ou répondre aux mêmes questions.</p>
               <p class="field-error" data-error="reExplain"></p>
             </div>
 
             <fieldset class="field field--full" data-field="supports">
-              <legend>Supports utilisés</legend>
+              <legend class="has-tooltip" data-tooltip="Cochez les leviers déjà en place pour ajuster les recommandations." title="Cochez les leviers déjà en place pour ajuster les recommandations.">
+                Supports utilisés
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </legend>
               <p class="field-hint">Cochez les leviers déjà en place pour ajuster les recommandations.</p>
               <div class="supports-grid">
                 <label><input type="checkbox" name="supports" value="Site" /> Site web</label>
@@ -86,28 +107,40 @@
             </fieldset>
 
             <div class="field" data-field="adBudget">
-              <label for="adBudget">Budget pub mensuel (€) (optionnel)</label>
+              <label for="adBudget" class="has-tooltip" data-tooltip="Montant dépensé chaque mois en publicité payante." title="Montant dépensé chaque mois en publicité payante.">
+                Budget pub mensuel (€) (optionnel)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="adBudget" name="adBudget" type="number" inputmode="decimal" placeholder="ex. 1500" min="0" step="1" />
               <p class="field-hint">Servez-vous-en pour estimer le ROI des scénarios.</p>
               <p class="field-error" data-error="adBudget"></p>
             </div>
 
             <div class="field" data-field="deltaSign">
-              <label for="deltaSign">Amélioration visée du taux de conversion final (points de %) (optionnel)</label>
+              <label for="deltaSign" class="has-tooltip" data-tooltip="Points supplémentaires souhaités entre Devis et Signatures." title="Points supplémentaires souhaités entre Devis et Signatures.">
+                Amélioration visée du taux de conversion final (points de %) (optionnel)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="deltaSign" name="deltaSign" type="number" inputmode="decimal" placeholder="ex. 5" min="0" step="0.1" />
               <p class="field-hint">Points supplémentaires souhaités sur Devis → Signatures.</p>
               <p class="field-error" data-error="deltaSign"></p>
             </div>
 
             <div class="field" data-field="nbSales">
-              <label for="nbSales">Nombre de commerciaux (optionnel)</label>
+              <label for="nbSales" class="has-tooltip" data-tooltip="Effectif des personnes en charge de la vente." title="Effectif des personnes en charge de la vente.">
+                Nombre de commerciaux (optionnel)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="nbSales" name="nbSales" type="number" inputmode="numeric" placeholder="ex. 4" min="0" step="1" />
               <p class="field-hint">Par défaut, nous considérons 1 commercial.</p>
               <p class="field-error" data-error="nbSales"></p>
             </div>
 
             <div class="field" data-field="hourlyRate">
-              <label for="hourlyRate">Taux horaire estimé (€) (optionnel)</label>
+              <label for="hourlyRate" class="has-tooltip" data-tooltip="Coût horaire moyen d’un commercial pour valoriser le temps passé." title="Coût horaire moyen d’un commercial pour valoriser le temps passé.">
+                Taux horaire estimé (€) (optionnel)
+                <span class="tooltip-icon" aria-hidden="true">?</span>
+              </label>
               <input id="hourlyRate" name="hourlyRate" type="number" inputmode="decimal" placeholder="ex. 50" min="0" step="1" />
               <p class="field-hint">Utilisé pour chiffrer le coût des frictions internes.</p>
               <p class="field-error" data-error="hourlyRate"></p>
@@ -174,7 +207,10 @@
           </div>
 
           <div class="scenario-controls">
-            <label for="scenarioMode">Scénario global</label>
+            <label for="scenarioMode" class="has-tooltip" data-tooltip="Choisissez comment projeter l’amélioration prioritaire du tunnel." title="Choisissez comment projeter l’amélioration prioritaire du tunnel.">
+              Scénario global
+              <span class="tooltip-icon" aria-hidden="true">?</span>
+            </label>
             <select id="scenarioMode" name="scenarioMode">
               <option value="weak">+10% / +20% sur l’étape la plus faible</option>
               <option value="tc3">+10% / +20% sur Devis → Signatures</option>
@@ -221,7 +257,10 @@
           </div>
 
           <div class="benchmark-controls">
-            <label for="sector">Secteur analysé</label>
+            <label for="sector" class="has-tooltip" data-tooltip="Sélectionnez votre secteur pour comparer vos taux aux moyennes." title="Sélectionnez votre secteur pour comparer vos taux aux moyennes.">
+              Secteur analysé
+              <span class="tooltip-icon" aria-hidden="true">?</span>
+            </label>
             <select id="sector" name="sector">
               <option value="general">Général B2B</option>
               <option value="industrie">Industrie</option>
