@@ -3,73 +3,304 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Simulateur d’opportunités</title>
+    <title>Audit tunnel commercial</title>
     <link rel="stylesheet" href="design/charte.css" />
     <link rel="stylesheet" href="assets/css/app.css" />
     <script src="assets/js/simulator.js" defer></script>
   </head>
   <body>
     <main>
-      <article class="sim-card">
-        <header>
-          <h1>Simulateur d’opportunités</h1>
-          <p>Modifiez les valeurs puis calculez votre projection : aucune donnée n’est envoyée côté serveur.</p>
+      <article class="sim-app">
+        <header class="sim-header">
+          <h1>Audit express du tunnel commercial</h1>
+          <p>
+            Collectez en moins d’une minute les indicateurs clés pour obtenir un diagnostic, un chiffrage et un plan d’actions
+            priorisé. Tous les calculs restent sur votre navigateur.
+          </p>
+          <p class="data-notice">Les données restent sur votre appareil.</p>
+          <div class="header-actions">
+            <button type="button" id="export" class="sim-btn">Exporter le diagnostic (PDF)</button>
+          </div>
         </header>
 
-        <div class="sim-grid" role="group" aria-labelledby="inputs-title">
-          <h2 id="inputs-title" class="visually-hidden">Entrées du simulateur</h2>
-
-          <label>
-            Visites qualifiées / mois
-            <input id="visits" type="number" placeholder="ex. 5000" min="0" inputmode="decimal" />
-          </label>
-
-          <label>
-            Taux de conversion actuel (%)
-            <input id="conv" type="number" placeholder="ex. 1,5" step="0.1" min="0" max="100" inputmode="decimal" />
-          </label>
-
-          <label>
-            Panier moyen (€)
-            <input id="aov" type="number" placeholder="ex. 60" step="0.01" min="0" inputmode="decimal" />
-          </label>
-
-          <label>
-            Amélioration visée (points de %)
-            <input id="delta" type="number" placeholder="ex. 1" step="0.1" min="0" inputmode="decimal" />
-          </label>
-
-          <label>
-            Budget pub mensuel (optionnel) (€)
-            <input id="adspend" type="number" placeholder="ex. 1500" step="1" min="0" inputmode="decimal" />
-          </label>
-
-          <div class="sim-actions">
-            <button type="button" id="calculate" class="sim-btn">Calculer</button>
-            <a class="sim-link" id="cta" href="https://nexus-strategie.fr/Nexus-26fc5cfed6a88039a83beff4f81756fa?source=copy_link#26fc5cfed6a88056a43cf40d86a8200a" target="_blank" rel="noopener">Réserver un audit gratuit (30 min)</a>
+        <section id="section-questionnaire" class="sim-section">
+          <div class="section-title">
+            <span class="section-index">1</span>
+            <div>
+              <h2>Questionnaire</h2>
+              <p>Renseignez les métriques mensuelles de votre entonnoir.</p>
+            </div>
           </div>
-        </div>
 
-        <section class="sim-kpi" aria-live="polite">
-          <article class="sim-box">
-            <h2>CA mensuel actuel (estimé)</h2>
-            <p class="sim-value" id="caActuel">—</p>
-          </article>
-          <article class="sim-box">
-            <h2>Gains potentiels (Δ visée)</h2>
-            <p class="sim-value" id="gain">—</p>
-          </article>
-          <article class="sim-box">
-            <h2>CA mensuel projeté</h2>
-            <p class="sim-value" id="caProjete">—</p>
-          </article>
-          <article class="sim-box">
-            <h2>ROI pub (indicatif)</h2>
-            <p class="sim-value" id="roi">—</p>
-          </article>
+          <form id="tunnel-form" class="form-grid" novalidate>
+            <div class="field" data-field="visitors">
+              <label for="visitors">Visiteurs mensuels (V)</label>
+              <input id="visitors" name="visitors" type="number" inputmode="numeric" placeholder="ex. 5000" min="0" step="1" />
+              <p class="field-hint">Nombre total de visiteurs uniques sur la période.</p>
+              <p class="field-error" data-error="visitors"></p>
+            </div>
+
+            <div class="field" data-field="leads">
+              <label for="leads">Leads entrants / mois (L)</label>
+              <input id="leads" name="leads" type="number" inputmode="numeric" placeholder="ex. 240" min="0" step="1" />
+              <p class="field-hint">Contacts qualifiés ayant laissé leurs coordonnées.</p>
+              <p class="field-error" data-error="leads"></p>
+            </div>
+
+            <div class="field" data-field="quotes">
+              <label for="quotes">Devis envoyés / mois (D)</label>
+              <input id="quotes" name="quotes" type="number" inputmode="numeric" placeholder="ex. 95" min="0" step="1" />
+              <p class="field-hint">Nombre de propositions commerciales émises.</p>
+              <p class="field-error" data-error="quotes"></p>
+            </div>
+
+            <div class="field" data-field="signatures">
+              <label for="signatures">Signatures / mois (S)</label>
+              <input id="signatures" name="signatures" type="number" inputmode="numeric" placeholder="ex. 32" min="0" step="1" />
+              <p class="field-hint">Contrats signés ou ventes conclues.</p>
+              <p class="field-error" data-error="signatures"></p>
+            </div>
+
+            <div class="field" data-field="averageOrder">
+              <label for="averageOrder">Panier moyen (€) (PM)</label>
+              <input id="averageOrder" name="averageOrder" type="number" inputmode="decimal" placeholder="ex. 2800" min="0" step="0.01" />
+              <p class="field-hint">Panier moyen = valeur d’une commande signée.</p>
+              <p class="field-error" data-error="averageOrder"></p>
+            </div>
+
+            <div class="field" data-field="reExplain">
+              <label for="reExplain">Temps moyen “à réexpliquer” par commercial / semaine (h) (TR)</label>
+              <input id="reExplain" name="reExplain" type="number" inputmode="decimal" placeholder="ex. 3" min="0" step="0.1" />
+              <p class="field-hint">Temps passé à reformuler l’offre ou répondre aux mêmes questions.</p>
+              <p class="field-error" data-error="reExplain"></p>
+            </div>
+
+            <fieldset class="field field--full" data-field="supports">
+              <legend>Supports utilisés</legend>
+              <p class="field-hint">Cochez les leviers déjà en place pour ajuster les recommandations.</p>
+              <div class="supports-grid">
+                <label><input type="checkbox" name="supports" value="Site" /> Site web</label>
+                <label><input type="checkbox" name="supports" value="Plaquette" /> Plaquette</label>
+                <label><input type="checkbox" name="supports" value="Emailing" /> Emailing</label>
+                <label><input type="checkbox" name="supports" value="Scripts commerciaux" /> Scripts commerciaux</label>
+                <label><input type="checkbox" name="supports" value="Salons" /> Salons</label>
+                <label><input type="checkbox" name="supports" value="Autre" /> Autre</label>
+              </div>
+            </fieldset>
+
+            <div class="field" data-field="adBudget">
+              <label for="adBudget">Budget pub mensuel (€) (optionnel)</label>
+              <input id="adBudget" name="adBudget" type="number" inputmode="decimal" placeholder="ex. 1500" min="0" step="1" />
+              <p class="field-hint">Servez-vous-en pour estimer le ROI des scénarios.</p>
+              <p class="field-error" data-error="adBudget"></p>
+            </div>
+
+            <div class="field" data-field="deltaSign">
+              <label for="deltaSign">Amélioration visée du taux de conversion final (points de %) (optionnel)</label>
+              <input id="deltaSign" name="deltaSign" type="number" inputmode="decimal" placeholder="ex. 5" min="0" step="0.1" />
+              <p class="field-hint">Points supplémentaires souhaités sur Devis → Signatures.</p>
+              <p class="field-error" data-error="deltaSign"></p>
+            </div>
+
+            <div class="field" data-field="nbSales">
+              <label for="nbSales">Nombre de commerciaux (optionnel)</label>
+              <input id="nbSales" name="nbSales" type="number" inputmode="numeric" placeholder="ex. 4" min="0" step="1" />
+              <p class="field-hint">Par défaut, nous considérons 1 commercial.</p>
+              <p class="field-error" data-error="nbSales"></p>
+            </div>
+
+            <div class="field" data-field="hourlyRate">
+              <label for="hourlyRate">Taux horaire estimé (€) (optionnel)</label>
+              <input id="hourlyRate" name="hourlyRate" type="number" inputmode="decimal" placeholder="ex. 50" min="0" step="1" />
+              <p class="field-hint">Utilisé pour chiffrer le coût des frictions internes.</p>
+              <p class="field-error" data-error="hourlyRate"></p>
+            </div>
+          </form>
+
+          <div class="validation-summary">
+            <h3>Statut des entrées</h3>
+            <div class="validation-flags" role="status" aria-live="polite">
+              <span class="badge" data-summary-badge="visitors">Visiteurs</span>
+              <span class="badge" data-summary-badge="leads">Leads</span>
+              <span class="badge" data-summary-badge="quotes">Devis</span>
+              <span class="badge" data-summary-badge="signatures">Signatures</span>
+              <span class="badge" data-summary-badge="averageOrder">Panier moyen</span>
+              <span class="badge" data-summary-badge="reExplain">Frictions</span>
+            </div>
+            <p class="coherence" id="coherenceBadge"></p>
+          </div>
         </section>
 
-        <p class="sim-footnote">Formule e‑commerce : CA = Visites × (Taux/100) × Panier. Δ = Visites × (Δ points/100) × Panier. ROI = (Δ − Budget) / max(Budget, 1).</p>
+        <section id="section-diagnostic" class="sim-section">
+          <div class="section-title">
+            <span class="section-index">2</span>
+            <div>
+              <h2>Diagnostic visuel</h2>
+              <p>Analyse du tunnel et indice de friction interne.</p>
+            </div>
+          </div>
+
+          <div class="funnel" aria-live="polite">
+            <div class="funnel-steps">
+              <div class="funnel-step" data-step="tc1">
+                <span class="step-label">Visiteurs → Leads</span>
+                <div class="step-bar"><span class="step-fill"></span></div>
+                <span class="step-value" data-tc="tc1">—</span>
+              </div>
+              <div class="funnel-step" data-step="tc2">
+                <span class="step-label">Leads → Devis</span>
+                <div class="step-bar"><span class="step-fill"></span></div>
+                <span class="step-value" data-tc="tc2">—</span>
+              </div>
+              <div class="funnel-step" data-step="tc3">
+                <span class="step-label">Devis → Signatures</span>
+                <div class="step-bar"><span class="step-fill"></span></div>
+                <span class="step-value" data-tc="tc3">—</span>
+              </div>
+            </div>
+            <p class="funnel-message" id="weakLinkMessage"></p>
+            <div class="friction" role="img" aria-label="Indice de friction interne">
+              <span class="friction-label">Indice de friction “explication”</span>
+              <div class="friction-bar"><span class="friction-fill"></span></div>
+              <span class="friction-value" id="frictionValue">0</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-chiffrage" class="sim-section">
+          <div class="section-title">
+            <span class="section-index">3</span>
+            <div>
+              <h2>Chiffrage</h2>
+              <p>Gains potentiels sur l’étape limitante ou le closing final.</p>
+            </div>
+          </div>
+
+          <div class="scenario-controls">
+            <label for="scenarioMode">Scénario global</label>
+            <select id="scenarioMode" name="scenarioMode">
+              <option value="weak">+10% / +20% sur l’étape la plus faible</option>
+              <option value="tc3">+10% / +20% sur Devis → Signatures</option>
+            </select>
+          </div>
+
+          <div class="sim-tiles">
+            <article class="sim-tile">
+              <h3>CA mensuel actuel</h3>
+              <p class="sim-value" id="currentRevenue">—</p>
+              <p class="sim-sub" id="timeLostSummary">Heures perdues estimées : —</p>
+              <p class="sim-sub" id="timeCostSummary">Coût du temps perdu : —</p>
+            </article>
+            <article class="sim-tile">
+              <h3>Gains potentiels +10%</h3>
+              <p class="sim-value" id="gain10">—</p>
+              <p class="sim-sub" id="ca10">CA projeté : —</p>
+            </article>
+            <article class="sim-tile">
+              <h3>Gains potentiels +20%</h3>
+              <p class="sim-value" id="gain20">—</p>
+              <p class="sim-sub" id="ca20">CA projeté : —</p>
+            </article>
+            <article class="sim-tile" id="customGainTile">
+              <h3>Objectif utilisateur</h3>
+              <p class="sim-value" id="customGain">—</p>
+              <p class="sim-sub" id="customCa">CA projeté : —</p>
+            </article>
+            <article class="sim-tile" id="roiTile">
+              <h3>ROI publicitaire (indicatif)</h3>
+              <p class="sim-value" id="roi10">+10% : —</p>
+              <p class="sim-sub" id="roi20">+20% : —</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="section-benchmark" class="sim-section">
+          <div class="section-title">
+            <span class="section-index">4</span>
+            <div>
+              <h2>Benchmarking</h2>
+              <p>Comparez vos taux aux moyennes sectorielles.</p>
+            </div>
+          </div>
+
+          <div class="benchmark-controls">
+            <label for="sector">Secteur analysé</label>
+            <select id="sector" name="sector">
+              <option value="general">Général B2B</option>
+              <option value="industrie">Industrie</option>
+              <option value="services">Services B2B</option>
+              <option value="equipementiers">Équipementiers</option>
+            </select>
+          </div>
+
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Étape</th>
+                <th>Benchmark</th>
+                <th>Votre taux</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-row="tc1">
+                <th scope="row">Visiteur → Lead</th>
+                <td data-benchmark="tc1">—</td>
+                <td data-actual="tc1">—</td>
+                <td data-verdict="tc1">—</td>
+              </tr>
+              <tr data-row="tc2">
+                <th scope="row">Lead → Devis</th>
+                <td data-benchmark="tc2">—</td>
+                <td data-actual="tc2">—</td>
+                <td data-verdict="tc2">—</td>
+              </tr>
+              <tr data-row="tc3">
+                <th scope="row">Devis → Signature</th>
+                <td data-benchmark="tc3">—</td>
+                <td data-actual="tc3">—</td>
+                <td data-verdict="tc3">—</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="benchmark-summary">
+            <div class="score-card">
+              <span class="score-label">Score global</span>
+              <span class="score-value" id="globalScore">0</span>
+            </div>
+            <div class="benchmark-kpis">
+              <p>CA benchmark estimé : <strong id="benchmarkRevenue">—</strong></p>
+              <p>Manque à gagner potentiel : <strong id="lostRevenue">—</strong></p>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-reco" class="sim-section">
+          <div class="section-title">
+            <span class="section-index">5</span>
+            <div>
+              <h2>Plan d’action priorisé</h2>
+              <p>3 leviers maximum, classés par impact et facilité.</p>
+            </div>
+          </div>
+
+          <ol class="reco-list" id="recoList"></ol>
+          <div class="reco-cta">
+            <button type="button" id="refreshRecommendations" class="sim-link">Mettre à jour les recommandations</button>
+          </div>
+        </section>
+
+        <section id="section-cta" class="sim-section">
+          <div class="section-title">
+            <span class="section-index">6</span>
+            <div>
+              <h2>Passer à l’action</h2>
+            </div>
+          </div>
+          <p class="cta-text">Voici vos 3 leviers immédiats. Voulez-vous qu’on en parle pour les activer rapidement ?</p>
+          <a class="cta-button" id="cta" href="#" target="_blank" rel="noopener">Prendre RDV pour passer à l’action</a>
+        </section>
       </article>
     </main>
   </body>

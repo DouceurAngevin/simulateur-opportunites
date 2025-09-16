@@ -1,37 +1,54 @@
 # Simulateur d’opportunités
 
-## État des lieux actuel
+## Aperçu
 
-- **Type d’outil :** simulateur statique côté client permettant d’estimer l’impact d’une amélioration du taux de conversion e-commerce.
-- **Données manipulées :** trafic qualifié mensuel, taux de conversion actuel, panier moyen, amélioration visée et budget publicitaire.
-- **Résultats restitués :** CA actuel, gains potentiels, CA projeté et ROI indicatif.
-- **Technologies** : HTML/CSS/JavaScript natifs, aucune dépendance externe, fonctionnement hors-ligne possible.
+Ce projet fournit un audit express du tunnel commercial B2B. L’interface recueille les volumes clés (visiteurs, leads, devis,
+signatures), calcule automatiquement les taux de conversion, chiffre les gains potentiels et génère un plan d’action priorisé.
+Tous les calculs s’exécutent dans le navigateur ; aucune donnée n’est transmise côté serveur.
 
-## Organisation structurée du projet
+## Fonctionnalités principales
+
+1. **Questionnaire guidé**
+   - Champs numériques avec validations instantanées (valeurs ≥ 0, cohérence V ≥ L ≥ D ≥ S).
+   - Aides contextuelles, badges ✅ / ⚠️ et surlignage automatique des incohérences.
+   - Prise en compte des supports marketing existants, du budget pub, du temps passé à réexpliquer, etc.
+   - Persistance `localStorage` + préremplissage via paramètres d’URL (`?V=...&L=...`).
+
+2. **Diagnostic visuel du tunnel**
+   - Entonnoir interactif avec mise en évidence du maillon faible et comparaison aux benchmarks sectoriels.
+   - Indice de friction “explication” normalisé sur 0–100.
+
+3. **Chiffrage des gains & pertes**
+   - Scénarios +10 % / +20 % sur l’étape limitante ou sur le closing final (sélecteur utilisateur).
+   - Calcul du CA actuel, gains potentiels, ROI publicitaire (si budget renseigné) et objectif custom basé sur ΔCsign.
+   - Estimation du temps perdu et de son coût (avec paramètres commerciaux optionnels).
+
+4. **Benchmarking paramétrable**
+   - Comparaison aux moyennes fictives par secteur (JSON local), scoring pondéré et estimation du manque à gagner.
+
+5. **Plan d’action priorisé**
+   - Génération de 3 recommandations maximum selon l’étape critique et les frictions internes.
+   - Impact, facilité, effort et délai estimés, avec prise en compte des supports déjà disponibles.
+
+6. **Call-to-action & export**
+   - Bouton « Prendre RDV » prérempli avec les paramètres de l’audit.
+   - Export PDF via `window.print()` et mention explicite sur la confidentialité (« Les données restent sur votre appareil »).
+
+## Organisation du projet
 
 ```
 .
-├── index.html              # Structure de la page et points d’ancrage pour les composants
+├── index.html              # Structure de la page et sections fonctionnelles
 ├── assets/
 │   ├── css/
-│   │   └── app.css         # Styles d’interface consommant la charte graphique
+│   │   └── app.css         # Layout et composants (consomme design/charte.css)
 │   └── js/
-│       └── simulator.js    # Logique de calcul (séparable pour d’autres frontends)
+│       └── simulator.js    # Logique métier : validations, calculs, recommandations
 └── design/
-    └── charte.css          # Charte graphique indépendante (couleurs, typos, espacements)
+    └── charte.css          # Charte graphique (tokens couleurs/typos + variantes dark)
 ```
-
-- Le HTML se limite au markup sémantique (sections, formulaires, KPI) et charge les ressources statiques.
-- Le JavaScript encapsule la logique métier dans `compute()` et expose uniquement un listener sur le bouton « Calculer ».
-- La charte graphique est isolée dans `design/charte.css`. Les styles applicatifs de `assets/css/app.css` ne manipulent que des variables définies dans la charte, ce qui facilite le remplacement du thème ou le branchement de styles alternatifs.
-
-## Pistes d’évolution
-
-1. **Validation en direct** : afficher des messages lorsque des champs sont vides ou incohérents.
-2. **Persistances des valeurs** : stocker les entrées utilisateur dans `localStorage` pour retrouver la dernière simulation.
-3. **Export / partage** : générer un résumé PDF ou un lien partageable avec les paramètres saisis.
-4. **Intégration Notion / iframe** : grâce à la séparation logique/charte, réutiliser `simulator.js` dans d’autres environnements.
 
 ## Utilisation
 
-Ouvrir simplement `index.html` dans un navigateur moderne. Aucun build ni serveur n’est requis.
+Aucun build n’est nécessaire. Ouvrez `index.html` dans un navigateur moderne pour lancer l’audit. Les données sont conservées
+localement (et peuvent être exportées via la fonction d’impression du navigateur).
