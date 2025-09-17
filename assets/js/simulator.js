@@ -166,6 +166,8 @@ const tiles = {
   roiTile: document.getElementById('roiTile')
 };
 
+const ctaSummary = document.getElementById('ctaSummary');
+
 const benchmarkCells = {
   tc1: {
     benchmark: document.querySelector('[data-benchmark="tc1"]'),
@@ -782,6 +784,78 @@ function renderChiffrage(numericState, conversions) {
   }
 }
 
+function renderCtaSummary(numericState, conversions) {
+  if (!ctaSummary) {
+    return;
+  }
+
+  ctaSummary.innerHTML = '';
+
+  const hasBaseData = numericState.signatures > 0 && numericState.averageOrder > 0;
+
+  if (!hasBaseData) {
+    const fallback = document.createElement('p');
+    fallback.className = 'cta-text';
+    fallback.textContent = 'Complétez vos signatures et votre panier moyen pour obtenir un récapitulatif personnalisé.';
+    ctaSummary.append(fallback);
+    return;
+  }
+
+  const sentences = [];
+  const caActuel = numericState.signatures * numericState.averageOrder;
+  const budget = numericState.adBudget;
+  const hasBudget = budget > 0;
+
+  if (hasBudget) {
+    const perEuro = budget > 0 ? caActuel / budget : 0;
+    sentences.push(
+      `Actuellement, vous investissez ${formatCurrency(budget)} en publicité chaque mois et vous en récupérez ${formatCurrency(
+        caActuel
+      )}, soit ${formatNumber(perEuro)} € par euro investi.`
+    );
+  } else {
+    sentences.push(`Actuellement, votre tunnel génère ${formatCurrency(caActuel)} de chiffre d’affaires par mois.`);
+  }
+
+  const { weakestStep, availableSteps } = determineWeakestStep(conversions, numericState);
+  if (availableSteps.length > 0) {
+    const weakestLabel = STEP_LABELS[weakestStep];
+    const weakestRate = conversions[weakestStep];
+    sentences.push(`Votre principal point de progression concerne ${weakestLabel} avec un taux actuel de ${formatPercent(weakestRate)}.`);
+  } else {
+    sentences.push('Renseignez vos volumes de tunnel pour identifier le point de progression prioritaire.');
+  }
+
+  const scenarioTarget = formState.scenarioMode === 'tc3' ? 'tc3' : lastWeakestStep;
+  const flow10 = projectFlow(numericState, conversions, scenarioTarget, 1.1);
+  const ca10 = flow10.signatures * numericState.averageOrder;
+  const gain10 = Math.max(0, ca10 - caActuel);
+
+  if (gain10 > 0) {
+    if (hasBudget) {
+      const extraPerEuro = gain10 / budget;
+      sentences.push(
+        `En optimisant vos conversions de 10 %, chaque euro investi pourrait générer ${formatNumber(extraPerEuro)} € supplémentaires, soit ${formatCurrency(gain10)} par mois.`
+      );
+    } else {
+      sentences.push(`En optimisant vos conversions de 10 %, vous pourriez ajouter ${formatCurrency(gain10)} de chiffre d’affaires mensuel.`);
+    }
+  } else if (availableSteps.length > 0) {
+    sentences.push(
+      `Avec une amélioration de 10 % sur ${STEP_LABELS[scenarioTarget]}, votre chiffre d’affaires resterait stable faute de volume suffisant. Ajustez vos données pour affiner le calcul.`
+    );
+  } else {
+    sentences.push('Complétez l’ensemble des volumes du tunnel pour projeter le gain d’une optimisation de 10 %.');
+  }
+
+  sentences.forEach((text) => {
+    const paragraph = document.createElement('p');
+    paragraph.className = 'cta-text';
+    paragraph.textContent = text;
+    ctaSummary.append(paragraph);
+  });
+}
+
 function renderBenchmark(numericState, conversions) {
   const benchmark = BENCHMARKS[formState.sector] ?? BENCHMARKS[DEFAULT_SECTOR];
   const weights = { tc1: 0.35, tc2: 0.25, tc3: 0.4 };
@@ -912,6 +986,7 @@ function computeAndRender() {
   renderValidation(validation);
   renderFunnel(conversions, numericState);
   renderChiffrage(numericState, conversions);
+  renderCtaSummary(numericState, conversions);
   renderBenchmark(numericState, conversions);
   renderRecommendations(numericState, conversions);
   saveState();
